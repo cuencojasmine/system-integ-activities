@@ -3,7 +3,7 @@
     <h1>QR Code Scanner</h1>
 
     <h2>Scan from WebCam:</h2>
-    <video ref="videoElem" style="width: 100%; max-width: 400px;"></video>
+    <video ref="videoElem" playsinline muted style="width: 100%; max-width: 400px;"></video>
 
     <div class="controls">
       <button @click="startScan">Start Scanning</button>
@@ -46,7 +46,10 @@ onMounted(async () => {
         webcamResult.value = res.data
         lastDetectedAt.value = new Date().toLocaleTimeString()
       },
-      { returnDetailedScanResult: true }
+      {
+        returnDetailedScanResult: true,
+        preferredCamera: 'environment'
+      }
     )
   }
 })
