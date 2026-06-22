@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Hello World</h1>
-    <v-btn>Submit</v-btn>
+    <v-btn to="/login">Submit</v-btn>
   </div>
 </template>
 
