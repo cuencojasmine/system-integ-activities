@@ -25,6 +25,10 @@
 
 <script lang="ts" setup>
 
+definePageMeta({
+  middleware: 'auth'
+})
+
 const config = useRuntimeConfig()
 
 declare global {
