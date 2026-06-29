@@ -10,9 +10,38 @@
       </div>
 
       <!-- Content -->
-      <v-card-text class="text-center px-12 pt-8 pb-10">
+      <v-card-text class="text-center px-10 pt-8 pb-10">
         <h2 class="user-name mb-2">{{ user?.name }}</h2>
-        <p class="user-email mb-10">{{ user?.email }}</p>
+        <p class="user-email mb-8">{{ user?.email }}</p>
+
+        <!-- Nav buttons -->
+        <div class="d-flex flex-column gap-3 mb-8">
+          <v-btn
+            class="nav-btn"
+            rounded="xl"
+            size="large"
+            prepend-icon="mdi-map-outline"
+            block
+            @click="navigateTo('/maps')"
+          >
+            Maps
+          </v-btn>
+
+          <br />
+          
+          <v-btn
+            class="nav-btn"
+            rounded="xl"
+            size="large"
+            prepend-icon="mdi-qrcode-scan"
+            block
+            @click="navigateTo('/qr-scanner')"
+          >
+            QR Scanner
+          </v-btn>
+        </div>
+
+        <v-divider class="mb-6" />
 
         <v-btn
           class="logout-btn"
@@ -108,6 +137,13 @@ const logout = () => {
   font-size: 0.9rem;
   color: #2B5748;
   font-weight: 500;
+}
+
+.nav-btn {
+  background: linear-gradient(135deg, #0F2D40, #2B5748) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .logout-btn {
