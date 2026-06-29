@@ -39,6 +39,19 @@
           >
             QR Scanner
           </v-btn>
+
+          <br />
+          
+          <v-btn
+            class="nav-btn"
+            rounded="xl"
+            size="large"
+            prepend-icon="mdi-weather-rainy"
+            block
+            @click="navigateTo('/weather')"
+          >
+            Weather
+          </v-btn>
         </div>
 
         <v-divider class="mb-6" />
