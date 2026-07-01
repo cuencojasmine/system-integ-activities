@@ -85,15 +85,13 @@
 const currentWeather = ref(null);
 
 const getWeatherData = async () => {
-  const data = await $fetch('http://api.weatherapi.com/v1/forecast.json?key=2ca1945da9c2479991832325262906&q=Manila&days=7&aqi=no&alerts=no')
+  const data = await $fetch('https://api.weatherapi.com/v1/forecast.json?key=2ca1945da9c2479991832325262906&q=Manila&days=7&aqi=no&alerts=no')
   currentWeather.value = data
 
   
 }
 
 onMounted(getWeatherData);
-
-// --- Display helpers only (no functional/data changes) ---
 
 const upcomingHours = computed(() => {
   if (!currentWeather.value?.forecast?.forecastday) return [];
