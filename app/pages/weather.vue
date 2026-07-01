@@ -6,21 +6,18 @@
         <!-- Location -->
         <div class="location-block">
           <h2 class="city">
-            {{ currentWeather?.location?.name }}<span class="region" v-if="currentWeather?.location?.region">, {{ currentWeather?.location?.region }}</span>
+            {{ currentWeather?.location?.name }}<span class="region" v-if="currentWeather?.location?.region">, {{
+              currentWeather?.location?.region }}</span>
           </h2>
           <p class="country">{{ currentWeather?.location?.country }}</p>
         </div>
 
         <!-- Current conditions -->
         <div class="current-block">
-          <img
-            v-if="currentWeather?.current?.condition?.icon"
-            class="current-icon"
-            :src="`https:${currentWeather.current.condition.icon}`"
-            :alt="currentWeather?.current?.condition?.text"
-          />
+          <img v-if="currentWeather?.current?.condition?.icon" class="current-icon"
+            :src="`https:${currentWeather.current.condition.icon}`" :alt="currentWeather?.current?.condition?.text" />
           <div class="temp-block">
-            <h3 class="temp">{{ Math.round(currentWeather?.current?.temp_c) }}°C</h3>
+            <h3 class="temp">{{ (currentWeather?.current?.temp_c) }}°C</h3>
             <p class="condition">{{ currentWeather?.current?.condition?.text }}</p>
           </div>
         </div>
@@ -29,18 +26,10 @@
         <section class="forecast-section">
           <h4 class="section-title">Hourly Forecast</h4>
           <div class="hourly-scroll">
-            <div
-              class="hour-chip"
-              v-for="hour in upcomingHours"
-              :key="hour.time_epoch"
-            >
+            <div class="hour-chip" v-for="hour in upcomingHours" :key="hour.time_epoch">
               <p class="hour-time">{{ formatHour(hour.time) }}</p>
-              <img
-                class="hour-icon"
-                :src="`https:${hour.condition.icon}`"
-                :alt="hour.condition.text"
-              />
-              <p class="hour-temp">{{ Math.round(hour.temp_c) }}°</p>
+              <img class="hour-icon" :src="`https:${hour.condition.icon}`" :alt="hour.condition.text" />
+              <p class="hour-temp">{{ (hour.temp_c) }}°</p>
             </div>
           </div>
         </section>
@@ -49,21 +38,13 @@
         <section class="forecast-section">
           <h4 class="section-title">7-Day Forecast</h4>
           <div class="daily-list">
-            <div
-              class="day-row"
-              v-for="day in currentWeather?.forecast?.forecastday"
-              :key="day.date_epoch"
-            >
+            <div class="day-row" v-for="day in currentWeather?.forecast?.forecastday" :key="day.date_epoch">
               <p class="day-name">{{ formatDay(day.date) }}</p>
-              <img
-                class="day-icon"
-                :src="`https:${day.day.condition.icon}`"
-                :alt="day.day.condition.text"
-              />
+              <img class="day-icon" :src="`https:${day.day.condition.icon}`" :alt="day.day.condition.text" />
               <p class="day-condition">{{ day.day.condition.text }}</p>
               <p class="day-temps">
-                <span class="day-max">{{ Math.round(day.day.maxtemp_c) }}°</span>
-                <span class="day-min">{{ Math.round(day.day.mintemp_c) }}°</span>
+                <span class="day-max">{{ (day.day.maxtemp_c) }}°</span>
+                <span class="day-min">{{ (day.day.mintemp_c) }}°</span>
               </p>
             </div>
           </div>
@@ -83,26 +64,16 @@
 //@ts-nocheck
 
 const currentWeather = ref(null);
+const upcomingHours = ref([]);
 
 const getWeatherData = async () => {
-  const data = await $fetch('https://api.weatherapi.com/v1/forecast.json?key=2ca1945da9c2479991832325262906&q=Manila&days=7&aqi=no&alerts=no')
+  const data = await $fetch('http://api.weatherapi.com/v1/forecast.json?key=2ca1945da9c2479991832325262906 &q=San Fernando&days=7&aqi=no&alerts=no')
   currentWeather.value = data
 
-  
+  const nowEpoch = data.location?.localtime_epoch ?? Date.now() / 1000;
+  const todayHours = data.forecast.forecastday[0].hour;
+  upcomingHours.value = todayHours.filter((h) => h.time_epoch >= nowEpoch);
 }
-
-onMounted(getWeatherData);
-
-const upcomingHours = computed(() => {
-  if (!currentWeather.value?.forecast?.forecastday) return [];
-
-  const allHours = currentWeather.value.forecast.forecastday.flatMap(
-    (d) => d.hour
-  );
-  const nowEpoch = currentWeather.value.location?.localtime_epoch ?? Date.now() / 1000;
-
-  return allHours.filter((h) => h.time_epoch >= nowEpoch).slice(0, 12);
-});
 
 const formatHour = (timeStr) => {
   const date = new Date(timeStr.replace(' ', 'T'));
@@ -115,6 +86,9 @@ const formatDay = (dateStr) => {
   const isToday = date.toDateString() === today.toDateString();
   return isToday ? 'Today' : date.toLocaleDateString([], { weekday: 'short' });
 };
+
+onMounted(getWeatherData);
+
 </script>
 
 <style>
@@ -345,6 +319,7 @@ const formatDay = (dateStr) => {
     max-width: 100%;
     padding: 24px 18px 28px;
   }
+
   .temp {
     font-size: 44px;
   }
